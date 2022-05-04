@@ -1,4 +1,4 @@
-# OpenG2P-NG Features and Functionlity
+# OpenG2P-NG Features and Functions
 
 ## Overview
 Key features of openg2p-ng system:

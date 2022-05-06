@@ -26,4 +26,9 @@
   * The form gets filled automatically with necessary KYC information after verification from the server. (Can the the token be in signed verifiable credential format containing data such that connection to server is not required to fill the form? This may not be possible as USSD messages are limited in characters)&#x20;
   * _How does the beneficiary verify that the enumerator is authentic?_
 
+```mermaid
+flowchard TD
+A[Me] --> B[You]
+```
+
 ## Backend authentication

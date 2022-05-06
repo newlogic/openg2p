@@ -25,7 +25,7 @@ Key features of openg2p-ng system:
 
 ### Authentication with ID Systems
 
-#### MOSIP Authentication and KYC
+* MOSIP Authentication and KYC
 
 ### Manual adjudication
 
@@ -47,6 +47,15 @@ Key features of openg2p-ng system:
 * Change request of info by residents
 
 ## Eligibility engine
+
+## Tech stack
+
+| Software | Version | Comments   |
+| -------- | ------- | ---------- |
+| Odoo     | 12      | Currently. |
+| Postgres |         |            |
+| Redis    |         |            |
+| ODK      | 9.6     |            |
 
 ## Glossary
 

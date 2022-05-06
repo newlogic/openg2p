@@ -47,3 +47,16 @@ Key features of openg2p-ng system:
 * Change request of info by residents
 
 ## Eligibility engine
+
+## Glossary
+
+* Enumerator&#x20;
+* Supervisor&#x20;
+* Enumeration area&#x20;
+* Social worker&#x20;
+* Social registry&#x20;
+* Beneficiary registry&#x20;
+* Disbursement list&#x20;
+* Household Survey team&#x20;
+* Questionnaire VC - Verifiable Credentials
+

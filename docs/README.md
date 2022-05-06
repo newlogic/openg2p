@@ -28,14 +28,9 @@ Key features of openg2p-ng system:
   * Off line authentication capability
 * "last mile scenarios"
 
-| Scenarios | Connectivity | Phone type | Phone ownership | ID type |
-| --------- | ------------ | ---------- | --------------- | ------- |
-|   ****    |              |            |                 |         |
-|           |              |            |                 |         |
-
 ### Authentication with ID Systems
 
-* MOSIP Authentication and KYC
+* [MOSIP Authentication and KYC](mosip-authentication.md)
 
 ### Manual adjudication
 

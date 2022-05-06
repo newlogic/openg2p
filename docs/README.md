@@ -19,6 +19,10 @@ Key features of openg2p-ng system:
 
 ## Beneficiary onboarding
 
+* Self registration
+* Agent based registration - one agent registering many in a village as part of self registration
+* Survey/enumerator - carrying an App with filling forms.
+
 ### Authentication with ID Systems
 
 #### MOSIP Authentication and KYC

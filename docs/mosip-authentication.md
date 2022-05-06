@@ -28,7 +28,7 @@
 
 ```mermaid
 flowchart TD
-    A[Me] --> B[You]
+    A[T1] --> B[T2]
 ```
 
 ## Backend authentication

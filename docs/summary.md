@@ -1,4 +1,3 @@
 # Table of contents
 
-* [Home](features.md)
-
+* [Home](README.md)

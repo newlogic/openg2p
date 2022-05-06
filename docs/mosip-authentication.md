@@ -27,8 +27,8 @@
   * _How does the beneficiary verify that the enumerator is authentic?_
 
 ```mermaid
-flowchard TD
-A[Me] --> B[You]
+flowchart TD
+    A[Me] --> B[You]
 ```
 
 ## Backend authentication

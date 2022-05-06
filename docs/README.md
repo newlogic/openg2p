@@ -50,12 +50,18 @@ Key features of openg2p-ng system:
 
 ## Tech stack
 
-| Software | Version | Comments   |
-| -------- | ------- | ---------- |
-| Odoo     | 12      | Currently. |
-| Postgres |         |            |
-| Redis    |         |            |
-| ODK      | 9.6     |            |
+| Software | Version | Comments               |
+| -------- | ------- | ---------------------- |
+| Odoo     | 12      | Currently. Move to 15. |
+| Postgres |         |                        |
+| Redis    |         |                        |
+| ODK      | 9.6     |                        |
+
+## Source code
+
+Github repos:
+
+
 
 ## Glossary
 

@@ -17,18 +17,15 @@
 
 ### USSD Auth
 
-* Enumerator authenticates beneficiary&#x20;
-  * Beneficiary types in a USSD message. Receives a token.&#x20;
-  * Enumerator reads the displayed token. Possible methods:&#x20;
-    * Using OCR.&#x20;
-    * Beneficiary sends the token by SMS to Enumerator (?)&#x20;
-  * Enumerator enters token in Brollie App.&#x20;
-  * The form gets filled automatically with necessary KYC information after verification from the server. (Can the the token be in signed verifiable credential format containing data such that connection to server is not required to fill the form? This may not be possible as USSD messages are limited in characters)&#x20;
+* Enumerator authenticates beneficiary
+  * Beneficiary types in a USSD message. Receives a token.
+  * Enumerator reads the displayed token. Possible methods:
+    * Using OCR.
+    * Beneficiary sends the token by SMS to Enumerator (?)
+  * Enumerator enters token in Brollie App.
+  * The form gets filled automatically with necessary KYC information after verification from the server. (Can the the token be in signed verifiable credential format containing data such that connection to server is not required to fill the form? This may not be possible as USSD messages are limited in characters)
   * _How does the beneficiary verify that the enumerator is authentic?_
 
-```mermaid
-flowchart TD
-    A[T1] --> B[T2]
-```
+
 
 ## Backend authentication

@@ -29,8 +29,16 @@ Key features of openg2p-ng system:
 * "last mile scenarios"
 
 ### Registration
-
-
+* Registration is data collection for a scheme.
+  * Registration can happen via
+  * Existing data (from other schemes, databases, departments, digitized paper copies).  Consent of beneficiary is required here.
+  * Self registration.
+  * Assisted registration on the ground by an officer/enumerator by meeting beneficiary in person and filling a form using Brollie tablet app.
+* Registration does not mean eligibility.
+* Self registration could be done in the following ways:
+  * Online browser
+  * App
+  * USSD on mobile
 
 ### Authentication with ID Systems
 

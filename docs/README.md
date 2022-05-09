@@ -28,11 +28,35 @@ Key features of openg2p-ng system:
   * Off line authentication capability
 * "last mile scenarios"
 
+### Registration
+
+
+
 ### Authentication with ID Systems
 
 * [MOSIP Authentication and KYC](mosip-authentication.md)
 
 ### Manual adjudication
+
+## The last mile challenges
+
+* Connectivity:&#x20;
+  * Voice (USSD, SMS) + data (3G, 4G)&#x20;
+  * Voice (USSD, SMS) + 2G&#x20;
+  * No mobile network&#x20;
+* Cell phone type:&#x20;
+  * Basic phone (only USSD, SMS)&#x20;
+  * Feature phone (camera, Bluetooth, USSD, SMS)&#x20;
+  * Smart phone&#x20;
+* Cell phone ownership:&#x20;
+  * No phone Personal&#x20;
+  * Family - a single member of the family shares the phone&#x20;
+  * Community&#x20;
+* Biometric&#x20;
+  * Worn-out fingerprint&#x20;
+  * Face identification issues with older population and siblings&#x20;
+  * …&#x20;
+* Education - usage of one’s identity.
 
 ## Concept of household/group
 

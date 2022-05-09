@@ -26,6 +26,17 @@
   * The form gets filled automatically with necessary KYC information after verification from the server. (Can the the token be in signed verifiable credential format containing data such that connection to server is not required to fill the form? This may not be possible as USSD messages are limited in characters)
   * _How does the beneficiary verify that the enumerator is authentic?_
 
+### Inji Auth
+
+* Enumerator authenticates beneficiary&#x20;
+  * Beneficiary generates a VID on her MOSIP Inji App.&#x20;
+  * Beneficiary shares VC with Enumerator via Bluetooth.&#x20;
+  * Enumerator verifies credentials on Brollie App.&#x20;
+  * Clicks photograph of beneficiary.&#x20;
+  * Brollie App authenticates the beneficiary using face matching.&#x20;
+* The form gets filled automatically with necessary KYC information available in VC.
+* &#x20;Enumerator uploads Auth information to server for backend authentication, issue of token and de-duplication
+
 
 
 ## Backend authentication

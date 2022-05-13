@@ -19,8 +19,6 @@ Key features of openg2p-ng system:
 
 ## Beneficiary onboarding
 
-
-
 * Self registration
 * Agent based registration - one agent registering many in a village as part of self registration
 * Survey/enumerator - carrying an App with filling forms.
@@ -29,9 +27,10 @@ Key features of openg2p-ng system:
 * "last mile scenarios"
 
 ### Registration
+
 * Registration is data collection for a scheme.
   * Registration can happen via
-  * Existing data (from other schemes, databases, departments, digitized paper copies).  Consent of beneficiary is required here.
+  * Existing data (from other schemes, databases, departments, digitized paper copies). Consent of beneficiary is required here.
   * Self registration.
   * Assisted registration on the ground by an officer/enumerator by meeting beneficiary in person and filling a form using Brollie tablet app.
 * Registration does not mean eligibility.
@@ -48,22 +47,22 @@ Key features of openg2p-ng system:
 
 ## The last mile challenges
 
-* Connectivity:&#x20;
-  * Voice (USSD, SMS) + data (3G, 4G)&#x20;
-  * Voice (USSD, SMS) + 2G&#x20;
-  * No mobile network&#x20;
-* Cell phone type:&#x20;
-  * Basic phone (only USSD, SMS)&#x20;
-  * Feature phone (camera, Bluetooth, USSD, SMS)&#x20;
-  * Smart phone&#x20;
-* Cell phone ownership:&#x20;
-  * No phone Personal&#x20;
-  * Family - a single member of the family shares the phone&#x20;
-  * Community&#x20;
-* Biometric&#x20;
-  * Worn-out fingerprint&#x20;
-  * Face identification issues with older population and siblings&#x20;
-  * …&#x20;
+* Connectivity:
+  * Voice (USSD, SMS) + data (3G, 4G)
+  * Voice (USSD, SMS) + 2G
+  * No mobile network
+* Cell phone type:
+  * Basic phone (only USSD, SMS)
+  * Feature phone (camera, Bluetooth, USSD, SMS)
+  * Smart phone
+* Cell phone ownership:
+  * No phone Personal
+  * Family - a single member of the family shares the phone
+  * Community
+* Biometric
+  * Worn-out fingerprint
+  * Face identification issues with older population and siblings
+  * …
 * Education - usage of one’s identity.
 
 ## Concept of household/group
@@ -85,6 +84,8 @@ Key features of openg2p-ng system:
 
 ## Eligibility engine
 
+## Payments
+
 ## Proof of delivery
 
 ## Tech stack
@@ -100,17 +101,14 @@ Key features of openg2p-ng system:
 
 Github repos:
 
-
-
 ## Glossary
 
-* Enumerator&#x20;
-* Supervisor&#x20;
-* Enumeration area&#x20;
-* Social worker&#x20;
-* Social registry&#x20;
-* Beneficiary registry&#x20;
-* Disbursement list&#x20;
-* Household Survey team&#x20;
+* Enumerator
+* Supervisor
+* Enumeration area
+* Social worker
+* Social registry
+* Beneficiary registry
+* Disbursement list
+* Household Survey team
 * Questionnaire VC - Verifiable Credentials
-

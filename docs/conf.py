@@ -13,7 +13,7 @@ sys.path.append(os.path.abspath("./using/"))
 
 project = "OpenG2P-ng"
 slug = re.sub(r"\W+", "-", project.lower())
-version = "0.1"
+version = "2.0-dev"
 # release = theme_version_full
 author = "Newlogic Pte. Ltd."
 # copyright = author
@@ -74,7 +74,7 @@ html_theme_options = {
 html_context = {
     "display_github": True,
     "github_user": "newlogic",  # Username
-    "github_repo": "newlogic-g2p",  # Repo name
+    "github_repo": "openg2p",  # Repo name
     "github_version": "main",  # Version
     "conf_py_path": "/docs/",  # Path in the checkout to the docs root
 }

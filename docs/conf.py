@@ -75,7 +75,7 @@ html_context = {
     "display_github": True,
     "github_user": "newlogic",  # Username
     "github_repo": "openg2p",  # Repo name
-    "github_version": "main",  # Version
+    "github_version": "openg2p-ng-from-newlogic-g2p",  # Version
     "conf_py_path": "/docs/",  # Path in the checkout to the docs root
 }
 

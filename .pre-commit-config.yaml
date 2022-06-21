@@ -7,6 +7,8 @@ exclude: |
   /static/(src/)?lib/|
   # Repos using Sphinx to generate docs don't need prettying
   ^docs/_templates/.*\.html$|
+  # We do not want to mess with the generated files from gitbook
+  ^design-docs/|
   # You don't usually want a bot to modify your legal texts
   (LICENSE.*|COPYING.*)
 default_language_version:

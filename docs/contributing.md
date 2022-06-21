@@ -1,15 +1,15 @@
 # Contributing
 
-This project follows the Newlogic G2P [Code of Conduct](code_of_conduct). If you are not familiar with our
-code of conduct policy, take a minute to read the policy before starting with your first contribution.
+This project follows the OpenG2P-ng [Code of Conduct](code_of_conduct). If you are not familiar with our code
+of conduct policy, take a minute to read the policy before starting with your first contribution.
 
 Bug reports and code and documentation patches are welcome. You can help this project also by using the
 development version and by reporting any bugs you might encounter.
 
 ## **Did you find a bug?**
 
-- **Do not open up a GitHub issue if the bug is a security vulnerability in Newlogic G2P**, and instead
-  contact directly the maintainers of the project.
+- **Do not open up a GitHub issue if the bug is a security vulnerability in OpenG2P-ng**, and instead contact
+  directly the maintainers of the project.
 
 - **Ensure the bug was not already reported** by searching on GitHub under
   [Issues](https://github.com/newlogic/newlogic-g2p/issues).
@@ -28,7 +28,7 @@ development version and by reporting any bugs you might encounter.
 
 ## **Do you have questions about the source code?**
 
-- Ask any question about how to use Newlogic G2P in the
+- Ask any question about how to use OpenG2P-ng in the
   [Discussions](https://github.com/newlogic/newlogic-g2p/discussions).
 
 Thanks!

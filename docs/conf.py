@@ -11,7 +11,7 @@ sys.path.append(os.path.abspath("./demo/"))
 sys.path.append(os.path.abspath("./using/"))
 
 
-project = "Newlogic G2P"
+project = "OpenG2P-ng"
 slug = re.sub(r"\W+", "-", project.lower())
 version = "0.1"
 # release = theme_version_full
@@ -66,7 +66,7 @@ intersphinx_mapping = {
 }
 
 html_theme = "sphinx_rtd_theme"
-html_title = "Newlogic G2P Docs"
+html_title = "OpenG2P-ng Docs"
 html_theme_options = {
     "logo_only": False,
     "navigation_depth": 5,

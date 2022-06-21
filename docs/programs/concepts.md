@@ -46,13 +46,13 @@ The available managers are:
 
 **STATUS**: Work In Progress.
 
-Newlogic G2P can generate payment lists that can be shared with a bank to verify or execute transfers.
+OpenG2P-ng can generate payment lists that can be shared with a bank to verify or execute transfers.
 
 ## Mobile money
 
 ## Voucher program
 
-Newlogic G2P can generate nominative vouchers in batches ready to be printed.
+OpenG2P-ng can generate nominative vouchers in batches ready to be printed.
 
 The design of the vouchers can be customized by updating the voucher template.
 

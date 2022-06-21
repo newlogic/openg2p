@@ -1,8 +1,8 @@
 # Managing Programs
 
-`Programs` and `Cycles` are at the heart of Newlogic G2P.
+`Programs` and `Cycles` are at the heart of OpenG2P-ng.
 
-![Newlogic G2P Overview](https://github.com/newlogic/newlogic-g2p/raw/main/newlogic_g2p_overview.png)
+![OpenG2P-ng Overview](https://github.com/newlogic/newlogic-g2p/raw/main/newlogic_g2p_overview.png)
 
 ## Concepts
 
@@ -38,7 +38,7 @@ easily add your managers if those do not fit your needs.
 #### Eligibility Manager
 
 The eligibility manager verifies if a beneficiary is eligible for a given program. The eligibility
-determination can be based on data stored in Newlogic G2P or on an external system using API calls.
+determination can be based on data stored in OpenG2P-ng or on an external system using API calls.
 
 #### Entitlement Manager
 
@@ -65,13 +65,13 @@ The notification managers allow notifying beneficiaries of some events hapening 
 
 **STATUS**: Work In Progress.
 
-Newlogic G2P can generate payment lists that can be shared with a bank to verify or execute transfers.
+OpenG2P-ng can generate payment lists that can be shared with a bank to verify or execute transfers.
 
 ### Mobile money
 
 ### Voucher program
 
-Newlogic G2P can generate nominative vouchers in batches ready to be printed.
+OpenG2P-ng can generate nominative vouchers in batches ready to be printed.
 
 The design of the vouchers can be customized by updating the voucher template.
 

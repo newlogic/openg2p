@@ -2,8 +2,7 @@
 
 
 
-Features and functionality:\
-
+## Overview
 
 * We are addressing one of the last mile problems
 * Token seeding - main function
@@ -18,3 +17,5 @@ Features and functionality:\
 * Part of openg2p umbrella
 * No persistence of PII data
 * Data security and private at ODK Center - **TBD**
+
+## Design

@@ -111,8 +111,15 @@ class G2PEntitlement(models.Model):
     def _compute_name(self):
         for record in self:
             name = _("Entitlement")
+            initial_amount = "{:,.2f}".format(record.initial_amount)
             if record.is_cash_entitlement:
-                name += " Cash [" + str(record.initial_amount) + "]"
+                name += (
+                    " Cash ["
+                    + str(record.currency_id.symbol)
+                    + " "
+                    + initial_amount
+                    + "]"
+                )
             else:
                 name += " (" + str(record.code) + ")"
             record.name = name

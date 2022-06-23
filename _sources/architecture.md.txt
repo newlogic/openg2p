@@ -35,7 +35,7 @@ providers for the same.
 
 So, key parameters are:
 
-- All public/external facing interfaces of MOSIP must be standards-based for interoperability whenever
+- All public/external facing interfaces of OpenG2P must be standards-based for interoperability whenever
   possible.
 - 3rd party components should be integrated via well-defined interfaces and be easily installable.
 

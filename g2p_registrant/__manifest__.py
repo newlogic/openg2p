@@ -7,7 +7,7 @@
     "author": "Newlogic",
     "website": "https://newlogic.com/",
     "license": "LGPL-3",
-    "depends": ["base", "mail", "contacts"],
+    "depends": ["base", "mail", "contacts", "web"],
     "data": [
         "security/newlogic_security.xml",
         "security/ir.model.access.csv",
@@ -26,7 +26,11 @@
         "views/id_types_view.xml",
         "views/phone_number_view.xml",
     ],
-    "assets": {},
+    "assets": {
+        "web.assets_qweb": [
+            "g2p_registrant/static/src/xml/custom_web.xml",
+        ],
+    },
     "demo": [],
     "images": [],
     "application": True,

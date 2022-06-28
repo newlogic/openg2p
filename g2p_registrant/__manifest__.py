@@ -27,6 +27,9 @@
         "views/phone_number_view.xml",
     ],
     "assets": {
+        "web.assets_backend": [
+            "/g2p_registrant/static/src/js/custom_client_action.js",
+        ],
         "web.assets_qweb": [
             "g2p_registrant/static/src/xml/custom_web.xml",
         ],

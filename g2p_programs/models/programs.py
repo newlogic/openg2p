@@ -264,16 +264,33 @@ class G2PProgram(models.Model):
                 message = _("No Eligibility Manager defined.")
                 kind = "danger"
 
-            return {
-                "type": "ir.actions.client",
-                "tag": "display_notification",
-                "params": {
-                    "title": _("Enrollment"),
-                    "message": message,
-                    "sticky": True,
-                    "type": kind,
-                },
-            }
+            if kind == "success":
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": _("Enrollment"),
+                        "message": message + " %s",
+                        "links": [
+                            {
+                                "label": "Refresh Page",
+                            }
+                        ],
+                        "sticky": True,
+                        "type": kind,
+                    },
+                }
+            else:
+                return {
+                    "type": "ir.actions.client",
+                    "tag": "display_notification",
+                    "params": {
+                        "title": _("Enrollment"),
+                        "message": message,
+                        "sticky": True,
+                        "type": kind,
+                    },
+                }
 
     def deduplicate_beneficiaries(self):
         for rec in self:
@@ -346,7 +363,12 @@ class G2PProgram(models.Model):
                 "tag": "display_notification",
                 "params": {
                     "title": _("Cycle"),
-                    "message": message,
+                    "message": message + " %s",
+                    "links": [
+                        {
+                            "label": "Refresh Page",
+                        }
+                    ],
                     "sticky": True,
                     "type": kind,
                 },

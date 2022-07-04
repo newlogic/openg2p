@@ -125,7 +125,6 @@ msgid "A Wizard"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,help:g2p_programs.field_g2p_assign_program_registrants__partner_id
 #: model:ir.model.fields,help:g2p_programs.field_g2p_cycle_membership__partner_id
 #: model:ir.model.fields,help:g2p_programs.field_g2p_entitlement__partner_id
 #: model:ir.model.fields,help:g2p_programs.field_g2p_program_membership__partner_id
@@ -143,7 +142,6 @@ msgid "A journal must be defined for this program. Select a journal in the"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,help:g2p_programs.field_g2p_assign_program_registrants__program_id
 #: model:ir.model.fields,help:g2p_programs.field_g2p_assign_program_wizard__program_id
 #: model:ir.model.fields,help:g2p_programs.field_g2p_program_membership__program_id
 msgid "A program"
@@ -364,11 +362,6 @@ msgstr ""
 #. module: g2p_programs
 #: model_terms:ir.ui.view,arch_db:g2p_programs.assign_to_program_wizard_form_view
 msgid "Assign"
-msgstr ""
-
-#. module: g2p_programs
-#: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_assign_program_registrants__state__assigned
-msgid "Assigned"
 msgstr ""
 
 #. module: g2p_programs
@@ -638,7 +631,6 @@ msgid "Configuration"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_assign_program_registrants__state__conflict
 #: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_multi_entitlement_approval__state__conflict
 msgid "Conflict"
 msgstr ""
@@ -669,7 +661,6 @@ msgid "Create New Journal"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__create_uid
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard__create_uid
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle__create_uid
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_manager__create_uid
@@ -700,7 +691,6 @@ msgid "Created by"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__create_date
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard__create_date
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle__create_date
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_manager__create_date
@@ -996,7 +986,6 @@ msgid "Disbursement Journal Entry"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__display_name
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard__display_name
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle__display_name
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_manager__display_name
@@ -1341,7 +1330,6 @@ msgid "Have Beneficiaries"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__id
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard__id
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle__id
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_manager__id
@@ -1529,7 +1517,6 @@ msgid "Last Deduplication Date"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants____last_update
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard____last_update
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle____last_update
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_manager____last_update
@@ -1561,7 +1548,6 @@ msgid "Last Modified on"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__write_uid
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard__write_uid
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle__write_uid
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_manager__write_uid
@@ -1592,7 +1578,6 @@ msgid "Last Updated by"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__write_date
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard__write_date
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle__write_date
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_manager__write_date
@@ -1761,7 +1746,6 @@ msgid "Name:"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_assign_program_registrants__state__new
 #: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_multi_entitlement_approval__state__new
 #: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_program_membership__deduplication_status__new
 msgid "New"
@@ -1925,7 +1909,6 @@ msgid "Number of unread messages"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_assign_program_registrants__state__okay
 #: model:ir.model.fields.selection,name:g2p_programs.selection__g2p_multi_entitlement_approval__state__okay
 msgid "Okay"
 msgstr ""
@@ -2221,11 +2204,6 @@ msgid "Program Notification Manager"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__program_id
-msgid "Program Wizard"
-msgstr ""
-
-#. module: g2p_programs
 #: model_terms:ir.ui.view,arch_db:g2p_programs.view_cycle_manager_default_form
 #: model_terms:ir.ui.view,arch_db:g2p_programs.view_deduplication_manager_id_dedup_form
 #: model_terms:ir.ui.view,arch_db:g2p_programs.view_deduplication_manager_phone_number_form
@@ -2303,7 +2281,6 @@ msgid "Reference Number:"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__partner_id
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_wizard__registrant_ids
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_cycle_membership__partner_id
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_entitlement__partner_id
@@ -2314,11 +2291,6 @@ msgstr ""
 #. module: g2p_programs
 #: model:ir.model,name:g2p_programs.model_g2p_assign_program_wizard
 msgid "Registrant Add to Program Wizard"
-msgstr ""
-
-#. module: g2p_programs
-#: model:ir.model,name:g2p_programs.model_g2p_assign_program_registrants
-msgid "Registrant Assign to Program"
 msgstr ""
 
 #. module: g2p_programs
@@ -2559,7 +2531,6 @@ msgid "State"
 msgstr ""
 
 #. module: g2p_programs
-#: model:ir.model.fields,field_description:g2p_programs.field_g2p_assign_program_registrants__state
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_entitlement__state
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_multi_entitlement_approval__state
 #: model:ir.model.fields,field_description:g2p_programs.field_g2p_program__state

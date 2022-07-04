@@ -1,52 +1,35 @@
 # Part of Newlogic G2P. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
 
 class G2PAssignToProgramWizard(models.TransientModel):
     _name = "g2p.assign.program.wizard"
-    _description = "Registrant Add to Program Wizard"
+    _description = "Add Registrants to Program Wizard"
 
     @api.model
     def default_get(self, fields):
         res = super(G2PAssignToProgramWizard, self).default_get(fields)
-        _logger.info(
-            "Adding to Program Wizard with IDs: %s" % self.env.context.get("active_ids")
-        )
         if self.env.context.get("active_ids"):
-            reg_ids = []
-            target_type = "group"
-            for rec in self.env.context.get("active_ids"):
-                reg_ids.append([0, 0, {"partner_id": rec}])
-                registrant = self.env["res.partner"].search(
-                    [
-                        ("id", "=", rec),
-                    ]
-                )
-                if registrant.is_group:
-                    target_type = "group"
-                    res["group_ids"] = reg_ids
-                else:
-                    target_type = "individual"
-                    res["registrant_ids"] = reg_ids
+            # Get the first selected registrant and check if group or individual
+            partner_id = self.env.context.get("active_ids")[0]
+            registrant = self.env["res.partner"].search(
+                [
+                    ("id", "=", partner_id),
+                ]
+            )
+            target_type = "group" if registrant.is_group else "individual"
             res["target_type"] = target_type
-        return res
+            return res
+        else:
+            raise UserError(_("There are no selected registrants!"))
 
-    registrant_ids = fields.One2many(
-        "g2p.assign.program.registrants",
-        "program_id",
-        string="Registrant",
-    )
-    group_ids = fields.One2many(
-        "g2p.assign.program.registrants",
-        "program_id",
-        string="Group",
-    )
     target_type = fields.Selection(
-        selection=[("group", "Group"), ("individual", "Individual")], default="group"
+        selection=[("group", "Group"), ("individual", "Individual")]
     )
     program_id = fields.Many2one(
         "g2p.program",
@@ -57,27 +40,38 @@ class G2PAssignToProgramWizard(models.TransientModel):
     )
 
     def assign_registrant(self):
-        registrants = self.registrant_ids
-        if self.target_type == "group":
-            registrants = self.group_ids
-
-        for rec in registrants:
-            curr_registrant = self.env["g2p.program_membership"].search(
-                [
-                    ("partner_id", "=", rec.partner_id.id),
-                    ("program_id", "=", self.program_id.id),
-                ]
+        if self.env.context.get("active_ids"):
+            partner_ids = self.env.context.get("active_ids")
+            _logger.info(
+                "Adding to Program Wizard with registrant record IDs: %s" % partner_ids
             )
-            if curr_registrant:
-                rec.update({"state": "Conflict"})
-            else:
-                rec.update({"state": "Okay"})
-                main_vals = {
-                    "partner_id": rec.partner_id.id,
-                    "program_id": self.program_id.id,
-                }
-                _logger.info("Adding to Program Membership: %s" % main_vals)
-                self.env["g2p.program_membership"].create(main_vals)
+            for rec in self.env["res.partner"].search([("id", "in", partner_ids)]):
+                proceed = False
+                if rec.is_group and self.target_type == "group":
+                    proceed = True
+                else:
+                    _logger.info(
+                        "Ignored because registrant is not a group: %s" % rec.name
+                    )
+                if not rec.is_group and self.target_type == "individual":
+                    proceed = True
+                else:
+                    _logger.info(
+                        "Ignored because registrant is not an individual: %s" % rec.name
+                    )
+                if proceed:
+                    if self.program_id.id not in rec.program_membership_ids.ids:
+                        vals = {
+                            "partner_id": rec.id,
+                            "program_id": self.program_id.id,
+                        }
+                        _logger.info("Adding to Program Membership: %s" % vals)
+                        self.env["g2p.program_membership"].create(vals)
+                    else:
+                        _logger.info(
+                            "%s was ignored because the registrant is already in the Program %s"
+                            % (rec.name, self.program_id.name)
+                        )
 
     def open_wizard(self):
 
@@ -99,19 +93,6 @@ class G2PAssignToProgramRegistrants(models.TransientModel):
     _name = "g2p.assign.program.registrants"
     _description = "Registrant Assign to Program"
 
-    partner_id = fields.Many2one(
-        "res.partner",
-        "Registrant",
-        help="A beneficiary",
-        domain=[("is_registrant", "=", True)],
-        required=True,
-    )
-    program_id = fields.Many2one(
-        "g2p.assign.program.wizard",
-        "Program Wizard",
-        help="A program",
-        required=True,
-    )
     state = fields.Selection(
         [
             ("New", "New"),

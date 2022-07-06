@@ -32,6 +32,13 @@
                 <field name="registration_date" />
                 <field name="disabled" invisible="1" />
                 <field name="company_id" groups="base.group_multi_company" />
+                <button
+                    name="test_query"
+                    string="Test Query"
+                    type='object'
+                    class="btn-secondary"
+                    groups="base.group_erp_manager"
+                />
             </tree>
         </field>
     </record>

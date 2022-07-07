@@ -16,7 +16,7 @@ class G2PGroup(models.Model):
     )
     is_partial_group = fields.Boolean("Partial Group")
 
-    def count_individuals(self, kinds=None, criteria=None):
+    def count_individuals_OLD(self, kinds=None, criteria=None):
         self.ensure_one()
         # Only count active groups
 
@@ -44,6 +44,24 @@ class G2PGroup(models.Model):
             domain.extend(criteria)
         return self.env["res.partner"].search_count(domain)
 
+    def count_individuals(self, kinds=None, criteria=None):
+        self.ensure_one()
+        membership_kind_domain = None
+        individual_domain = None
+        if self.group_membership_ids:
+            if kinds:
+                membership_kind_domain = [("name", "in", kinds)]
+        else:
+            return 0
+
+        if criteria is not None:
+            individual_domain = criteria
+
+        res_ids = self.query_members_aggregate(
+            membership_kind_domain, individual_domain
+        )
+        return len(res_ids)
+
     def query_members_aggregate(
         self, membership_kind_domain=None, individual_domain=None
     ):
@@ -63,7 +81,7 @@ class G2PGroup(models.Model):
             "g2p_group_membership_id",
             "id",
         )
-        query_obj.left_join(
+        rel_kind_alias = query_obj.left_join(
             membership_kind_rel_alias,
             "g2p_group_membership_kind_id",
             "g2p_group_membership_kind",
@@ -71,20 +89,37 @@ class G2PGroup(models.Model):
             "id",
         )
 
+        # Build where clause for the membership_alias
+        membership_query_obj = expression.expression(
+            model=self.env["g2p.group.membership"],
+            domain=[("end_date", "=", None), ("group", "=", self.id)],
+            alias=membership_alias,
+        ).query
+        (
+            membership_from_clause,
+            membership_where_clause,
+            membership_where_params,
+        ) = membership_query_obj.get_sql()
+        # _logger.info("SQL DEBUG: Membership Kind Query: From:%s, Where:%s, Params:%s" %
+        #   (membership_from_clause,membership_where_clause,membership_where_params))
+        query_obj.add_where(membership_where_clause, membership_where_params)
+
         if membership_kind_domain:
-            membership_query_obj = expression.expression(
-                model=self.env["g2p.group.membership"],
+            membership_kind_query_obj = expression.expression(
+                model=self.env["g2p.group.membership.kind"],
                 domain=membership_kind_domain,
-                alias=membership_alias,
+                alias=rel_kind_alias,
             ).query
             (
-                membership_from_clause,
-                membership_where_clause,
-                membership_where_params,
-            ) = membership_query_obj.get_sql()
+                membership_kind_from_clause,
+                membership_kind_where_clause,
+                membership_kind_where_params,
+            ) = membership_kind_query_obj.get_sql()
             # _logger.info("SQL DEBUG: Membership Kind Query: From:%s, Where:%s, Params:%s" %
-            #   (membership_from_clause,membership_where_clause,membership_where_params))
-            query_obj.add_where(membership_where_clause, membership_where_params)
+            #   (membership_kind_from_clause,membership_kind_where_clause,membership_kind_where_params))
+            query_obj.add_where(
+                membership_kind_where_clause, membership_kind_where_params
+            )
 
         if individual_domain:
             individual_query_obj = expression.expression(
@@ -109,17 +144,18 @@ class G2PGroup(models.Model):
         self._cr.execute(select_query, select_params)
         results = self._cr.dictfetchall()
         _logger.info("SQL DEBUG: SQL Query Result: %s" % results)
+        return results
 
     def test_query(self):
         self.query_members_aggregate(
-            membership_kind_domain=[("end_date", "=", None)],
+            membership_kind_domain=[("name", "=", "Head")],
             individual_domain=[
                 ("gender", "=", "Female"),
                 ("birthdate", "<", fields.Datetime.now()),
             ],
         )
         self.query_members_aggregate(
-            membership_kind_domain=[("end_date", "=", None)],
+            membership_kind_domain=[("name", "!=", "Head")],
             individual_domain=[("gender", "=", "Male")],
         )
 

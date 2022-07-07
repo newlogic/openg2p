@@ -341,7 +341,6 @@ class G2PProgram(models.Model):
             elif program_manager is None:
                 message = _("No Program Manager defined.")
                 kind = "danger"
-
             if message is not None:
                 return {
                     "type": "ir.actions.client",

@@ -38,6 +38,7 @@
                     type='object'
                     class="btn-secondary"
                     groups="base.group_erp_manager"
+                    invisible="1"
                 />
             </tree>
         </field>

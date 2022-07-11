@@ -21,25 +21,27 @@ class G2PRegistrant(models.Model):
     image_1920_filename = fields.Char("Image 1920 FileName")
 
     def open_issue_idpass_wiz(self):
-        view = self.env.ref('g2p_idpass.issue_id_pass_wizard_form_view')
-        wiz = self.env['g2p.issue.idpass.wizard'].create({'registrant_id': self.id})
+        view = self.env.ref("g2p_idpass.issue_id_pass_wizard_form_view")
+        wiz = self.env["g2p.issue.idpass.wizard"].create({"registrant_id": self.id})
         return {
-            'name': _('Issue ID Pass'),
-            'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'g2p.issue.idpass.wizard',
-            'views': [(view.id, 'form')],
-            'view_id': view.id,
-            'target': 'new',
-            'res_id': wiz.id,
-            'context': self.env.context,
+            "name": _("Issue ID Pass"),
+            "type": "ir.actions.act_window",
+            "view_type": "form",
+            "view_mode": "form",
+            "res_model": "g2p.issue.idpass.wizard",
+            "views": [(view.id, "form")],
+            "view_id": view.id,
+            "target": "new",
+            "res_id": wiz.id,
+            "context": self.env.context,
         }
 
     def send_idpass_parameters(self, vals):  # noqa: C901
         id_pass_param = self.env["g2p.id.pass"].search([("is_active", "=", True)])
         if vals["idpass"]:
-            id_pass_param = self.env["g2p.id.pass"].search([("id", "=", vals["idpass"])])
+            id_pass_param = self.env["g2p.id.pass"].search(
+                [("id", "=", vals["idpass"])]
+            )
 
         if id_pass_param:
 

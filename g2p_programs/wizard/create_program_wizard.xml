@@ -25,37 +25,43 @@
                             options="{'no_open':True,'no_quick_create':True,'no_create':True}"
                         />
                     </group>
-                    <group string="Configure the Default Eligibility Criteria" colspan="4">
-                        <label for="eligibility_domain" string="FILTER:" />
-                        <field
-                            name="eligibility_domain"
-                            colspan="4"
-                            widget="domain"
-                            options="{'model': 'res.partner'}"
-                            nolabel="1"
-                        />
-                    </group>
-                    <group colspan="4" col="4">
-                        <group string="Configure the Cycle Manager" colspan="2">
-                            <field name="auto_approve_entitlements" />
-                            <field name="cycle_duration" />
-                            <field
-                                name="approver_group_id"
-                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"
-                                domain="[('category_id','=',%(g2p_registrant.newlogic_module)d)]"
-                            />
-                        </group>
-                        <group string="Configure the Entitlement Manager" colspan="2">
-                            <field name="amount_per_cycle" />
-                            <field name="amount_per_individual_in_group" />
-                            <field name="max_individual_in_group" />
-                            <field
-                                name="entitlement_validation_group_id"
-                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"
-                                domain="[('category_id','=',%(g2p_registrant.newlogic_module)d)]"
-                            />
-                        </group>
-                    </group>
+                    <notebook colspan="4">
+                        <page string="Configure the Default Eligibility Criteria">
+                            <group colspan="4" col="4">
+                                <label for="eligibility_domain" string="FILTER:" />
+                                <field
+                                    name="eligibility_domain"
+                                    colspan="4"
+                                    widget="domain"
+                                    options="{'model': 'res.partner'}"
+                                    nolabel="1"
+                                />
+                            </group>
+                        </page>
+                        <page string="Configure the Cycle Manager">
+                            <group colspan="4" col="4">
+                                <field name="auto_approve_entitlements" />
+                                <field name="cycle_duration" />
+                                <field
+                                    name="approver_group_id"
+                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                    domain="[('category_id','=',%(g2p_registrant.newlogic_module)d)]"
+                                />
+                            </group>
+                        </page>
+                        <page string="Configure the Entitlement Manager">
+                            <group colspan="4" col="4">
+                                <field name="amount_per_cycle" />
+                                <field name="amount_per_individual_in_group" />
+                                <field name="max_individual_in_group" />
+                                <field
+                                    name="entitlement_validation_group_id"
+                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                    domain="[('category_id','=',%(g2p_registrant.newlogic_module)d)]"
+                                />
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
                 <footer>
                     <button name="create_program" string="Create" type="object" class="oe_highlight" />

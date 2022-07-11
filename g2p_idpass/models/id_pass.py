@@ -7,6 +7,7 @@ class G2PIDPass(models.Model):
     _name = "g2p.id.pass"
     _description = "ID Pass"
 
+    name = fields.Char("Template Name")
     api_url = fields.Text("API URL")
     api_username = fields.Char("API Username")
     api_password = fields.Char("API Password")

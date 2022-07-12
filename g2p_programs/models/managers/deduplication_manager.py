@@ -370,11 +370,11 @@ class PhoneNumberDeduplication(models.Model):
         individuals_ids = [rec.individual.id for rec in group_memberships]
         _logger.info("individuals_ids: %s", individuals_ids)
         individual_phone_numbers = []
-        # Check ID Docs of each individual
+        # Check Phone Numbers of each individual
         for i in group_memberships:
             individual_phone_numbers += [x.id for x in i.individual.phone_number_ids]
 
-        # Check ID Docs of each group
+        # Check Phone Numbers of each group
         for ix in group:
             individual_phone_numbers += [x.id for x in ix.phone_number_ids]
 

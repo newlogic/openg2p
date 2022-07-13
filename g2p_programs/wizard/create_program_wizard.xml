@@ -26,7 +26,7 @@
                         />
                     </group>
                     <notebook colspan="4">
-                        <page string="Configure the Default Eligibility Criteria">
+                        <page string="Configure the Default Eligibility Criteria" name="eligibility">
                             <group colspan="4" col="4">
                                 <label for="eligibility_domain" string="FILTER:" />
                                 <field
@@ -38,7 +38,7 @@
                                 />
                             </group>
                         </page>
-                        <page string="Configure the Cycle Manager">
+                        <page string="Configure the Cycle Manager" name="cycle">
                             <group colspan="4" col="4">
                                 <field name="auto_approve_entitlements" />
                                 <field name="cycle_duration" />
@@ -49,8 +49,8 @@
                                 />
                             </group>
                         </page>
-                        <page string="Configure the Entitlement Manager">
-                            <group colspan="4" col="4">
+                        <page string="Configure the Entitlement Manager" name="entitlement">
+                            <group colspan="4" col="4" name="cash">
                                 <field name="amount_per_cycle" />
                                 <field name="amount_per_individual_in_group" />
                                 <field name="max_individual_in_group" />

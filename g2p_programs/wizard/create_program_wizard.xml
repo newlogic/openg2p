@@ -55,12 +55,14 @@
                                 <field name="amount_per_individual_in_group" />
                                 <field name="max_individual_in_group" />
                             </group>
-                            <field
-                                name="entitlement_validation_group_id"
-                                options="{'no_open':True,'no_create':True,'no_create_edit':True}"
-                                domain="[('category_id','=',%(g2p_registrant.newlogic_module)d)]"
-                                colspan="4"
-                            />
+                            <group colspan="4" col="4">
+                                <field
+                                    name="entitlement_validation_group_id"
+                                    options="{'no_open':True,'no_create':True,'no_create_edit':True}"
+                                    domain="[('category_id','=',%(g2p_registrant.newlogic_module)d)]"
+                                    colspan="4"
+                                />
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

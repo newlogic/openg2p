@@ -488,7 +488,7 @@ class IDDocumentDeduplicationEligibilityManager(models.Model):
                     if x.expiry_date and x.expiry_date > date.today()
                 ]
         registrant_ids_with_id = list(dict.fromkeys(registrant_ids_with_id))
-
+        _logger.info("Eligible registrants with ID: %s", registrant_ids_with_id)
         domain = [("id", "in", registrant_ids_with_id)]
         domain += self._safe_eval(self.eligibility_domain)
         return domain
@@ -538,6 +538,7 @@ class PhoneNumberDeduplicationEligibilityManager(models.Model):
                     i.id for x in i.phone_number_ids if not x.disabled
                 ]
         registrant_ids_with_phone = list(dict.fromkeys(registrant_ids_with_phone))
+        _logger.info("Eligible registrants with Phone: %s", registrant_ids_with_phone)
 
         domain = [("id", "in", registrant_ids_with_phone)]
         domain += self._safe_eval(self.eligibility_domain)

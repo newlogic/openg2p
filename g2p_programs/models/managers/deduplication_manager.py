@@ -1,6 +1,7 @@
 # Part of Newlogic G2P. See LICENSE file for full copyright and licensing details.
 import collections
 import logging
+from datetime import date
 
 from odoo import api, fields, models
 
@@ -473,12 +474,46 @@ class IDDocumentDeduplicationEligibilityManager(models.Model):
     _inherit = ["g2p.program_membership.manager", "g2p.manager.source.mixin"]
     _description = "ID Document Deduplication Eligibility"
 
-    def enroll_eligible_registrants(self, program_memberships):
-        # TODO: check if beneficiaries still match the criterias
-        return True
+    eligibility_domain = fields.Text(string="Domain", default="[]")
 
-    def verify_cycle_eligibility(self, cycle, program_memberships):
-        return self.enroll_eligible_registrants(program_memberships)
+    def _prepare_eligible_domain(self, membership):
+        ids = membership.mapped("partner_id.id")
+        registrant_ids = self.env["res.partner"].search([("id", "in", ids)])
+        registrant_ids_with_id = []
+        for i in registrant_ids:
+            if i.reg_ids:
+                registrant_ids_with_id += [
+                    i.id for x in i.reg_ids if x.expiry_date > date.today()
+                ]
+        registrant_ids_with_id = list(dict.fromkeys(registrant_ids_with_id))
+
+        domain = [("id", "in", registrant_ids_with_id)]
+        domain += self._safe_eval(self.eligibility_domain)
+        return domain
+
+    def enroll_eligible_registrants(self, program_memberships):
+        # TODO: check if the beneficiary still match the criterias
+        _logger.info("-" * 100)
+        _logger.info("Checking eligibility for %s", program_memberships)
+        for rec in self:
+            beneficiaries = rec._verify_eligibility(program_memberships)
+            return self.env["g2p.program_membership"].search(
+                [("partner_id", "in", beneficiaries)]
+            )
+
+    def verify_cycle_eligibility(self, cycle, membership):
+        for rec in self:
+            beneficiaries = rec._verify_eligibility(membership)
+            return self.env["g2p.cycle.membership"].search(
+                [("partner_id", "in", beneficiaries)]
+            )
+
+    def _verify_eligibility(self, membership):
+        domain = self._prepare_eligible_domain(membership)
+        _logger.info("Eligibility domain: %s", domain)
+        beneficiaries = self.env["res.partner"].search(domain).ids
+        _logger.info("Beneficiaries: %s", beneficiaries)
+        return beneficiaries
 
 
 class PhoneNumberDeduplicationEligibilityManager(models.Model):
@@ -491,9 +526,41 @@ class PhoneNumberDeduplicationEligibilityManager(models.Model):
     _inherit = ["g2p.program_membership.manager", "g2p.manager.source.mixin"]
     _description = "Phone Number Deduplication Eligibility"
 
-    def enroll_eligible_registrants(self, program_memberships):
-        # TODO: check if beneficiaries still match the criterias
-        return True
+    def _prepare_eligible_domain(self, membership):
+        ids = membership.mapped("partner_id.id")
+        registrant_ids = self.env["res.partner"].search([("id", "in", ids)])
+        registrant_ids_with_phone = []
+        for i in registrant_ids:
+            if i.reg_ids:
+                registrant_ids_with_phone += [
+                    i.id for x in i.phone_number_ids if not x.disabled
+                ]
+        registrant_ids_with_phone = list(dict.fromkeys(registrant_ids_with_phone))
 
-    def verify_cycle_eligibility(self, cycle, program_memberships):
-        return self.enroll_eligible_registrants(program_memberships)
+        domain = [("id", "in", registrant_ids_with_phone)]
+        domain += self._safe_eval(self.eligibility_domain)
+        return domain
+
+    def enroll_eligible_registrants(self, program_memberships):
+        # TODO: check if the beneficiary still match the criterias
+        _logger.info("-" * 100)
+        _logger.info("Checking eligibility for %s", program_memberships)
+        for rec in self:
+            beneficiaries = rec._verify_eligibility(program_memberships)
+            return self.env["g2p.program_membership"].search(
+                [("partner_id", "in", beneficiaries)]
+            )
+
+    def verify_cycle_eligibility(self, cycle, membership):
+        for rec in self:
+            beneficiaries = rec._verify_eligibility(membership)
+            return self.env["g2p.cycle.membership"].search(
+                [("partner_id", "in", beneficiaries)]
+            )
+
+    def _verify_eligibility(self, membership):
+        domain = self._prepare_eligible_domain(membership)
+        _logger.info("Eligibility domain: %s", domain)
+        beneficiaries = self.env["res.partner"].search(domain).ids
+        _logger.info("Beneficiaries: %s", beneficiaries)
+        return beneficiaries

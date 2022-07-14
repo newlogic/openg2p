@@ -131,6 +131,7 @@ class G2PProgram(models.Model):
             for mgr_obj in self.MANAGER_MODELS[mgr_fld]:
                 # Add a new record to default manager models
                 def_mgr_obj = self.MANAGER_MODELS[mgr_fld][mgr_obj]
+                _logger.info("DEBUG: %s" % def_mgr_obj)
                 def_mgr = self.env[def_mgr_obj].create(
                     {
                         "name": "Default",

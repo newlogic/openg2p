@@ -12,11 +12,13 @@ class ManagerSourceMixin(models.AbstractModel):
     def create(self, vals):
         """Override to update reference to source on the manager."""
         res = super().create(vals)
-        if self.env.context.get("active_model"):
-            # update reference on manager
-            self.env[self.env.context["active_model"]].browse(
-                self.env.context["active_id"]
-            ).manager_id = res.id
+        # TODO: Seems not required but this causes error when called from the create program wizard.
+        # Disable for now
+        # if self.env.context.get("active_model"):
+        #    # update reference on manager
+        #    self.env[self.env.context["active_model"]].browse(
+        #        self.env.context["active_id"]
+        #    ).manager_id = res.id
         return res
 
     def get_manager_view_id(self):

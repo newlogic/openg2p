@@ -17,15 +17,24 @@
         <field name="model">g2p.program.create.wizard</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="step1,step2" />
+                </header>
                 <sheet>
-                    <group string="Configure the new program's default settings" colspan="4" col="4">
+                    <!-- STEP 1 -->
+                    <group
+                        string="Configure the new program's default settings"
+                        colspan="4"
+                        col="4"
+                        attrs="{'invisible':[('state','=','step2')]}"
+                    >
                         <field name="name" />
                         <field
                             name="currency_id"
                             options="{'no_open':True,'no_quick_create':True,'no_create':True}"
                         />
                     </group>
-                    <notebook colspan="4">
+                    <notebook colspan="4" attrs="{'invisible':[('state','=','step2')]}">
                         <page string="Configure the Default Eligibility Criteria" name="eligibility">
                             <group colspan="4" col="4">
                                 <label for="eligibility_domain" string="FILTER:" />
@@ -65,10 +74,40 @@
                             </group>
                         </page>
                     </notebook>
+                    <!-- STEP 2 -->
+                    <div attrs="{'invisible':[('state','=','step1')]}">
+                        <label for="gen_benificiaries" string="Would you like to generate beneficiaries?" />
+                        <field name="gen_benificiaries" widget="radio" options="{'horizontal': true}" />
+                    </div>
+                    <div attrs="{'invisible':[('state','=','step1')]}">
+                        <label for="target_type" string="Import: " />
+                        <field name="target_type" widget="radio" options="{'horizontal': true}" />
+                        <b>registrants</b>
+                    </div>
                 </sheet>
                 <footer>
-                    <button name="create_program" string="Create" type="object" class="oe_highlight" />
-                    <!-- <button name="close_wizard" string="Cancel" type="object" class="btn-secondary" /> -->
+                    <button
+                        name="next_step"
+                        string="Next"
+                        icon="fa-chevron-right"
+                        type="object"
+                        class="btn-warning"
+                        attrs="{'invisible':[('state','=','step2')]}"
+                    />
+                    <button
+                        name="prev_step"
+                        string="Back"
+                        icon="fa-chevron-left"
+                        type="object"
+                        class="btn-warning"
+                        attrs="{'invisible':[('state','=','step1')]}"
+                    />
+                    <button
+                        name="create_program"
+                        string="Create"
+                        type="object"
+                        class="oe_highlight btn-primary"
+                    />
                     <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>

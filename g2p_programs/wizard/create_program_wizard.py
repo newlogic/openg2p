@@ -10,12 +10,15 @@ _logger = logging.getLogger(__name__)
 
 class G2PCreateNewProgramWiz(models.TransientModel):
     _name = "g2p.program.create.wizard"
+    _inherit = "base.programs.manager"
     _description = "Create a New Program Wizard"
 
     @api.model
     def default_get(self, fields):
         _logger.info("Creating a new program")
         res = super(G2PCreateNewProgramWiz, self).default_get(fields)
+
+        _logger.info("DEBUG: active_model: %s" % self.env.context.get("active_model"))
 
         # Set default currency from the user's current company
         currency_id = (
@@ -64,6 +67,41 @@ class G2PCreateNewProgramWiz(models.TransientModel):
         "res.groups", string="Payment Validation Group"
     )
 
+    target_type = fields.Selection(
+        [("group", "Group"), ("individual", "Individual")],
+        "Target Type",
+        default="group",
+    )
+    gen_benificiaries = fields.Selection(
+        [("yes", "Yes"), ("no", "No")], "Generate Beneficiaries", default="no"
+    )
+
+    state = fields.Selection(
+        [("step1", "Set Defaults"), ("step2", "Create Beneficiaries")],
+        "Status",
+        default="step1",
+        readonly=True,
+    )
+
+    def next_step(self):
+        if self.state == "step1":
+            self.state = "step2"
+        return self._reopen_self()
+
+    def prev_step(self):
+        if self.state == "step2":
+            self.state = "step1"
+        return self._reopen_self()
+
+    def _reopen_self(self):
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
+        }
+
     def create_program(self):
         # Set default program journal
         # journals = self.env["account.journal"].search(
@@ -80,6 +118,7 @@ class G2PCreateNewProgramWiz(models.TransientModel):
                 {
                     "name": rec.name,
                     "journal_id": journal_id,
+                    "target_type": rec.target_type,
                 }
             )
             program_id = program.id
@@ -149,6 +188,23 @@ class G2PCreateNewProgramWiz(models.TransientModel):
                 }
             )
             vals.update({"entitlement_managers": [(4, mgr.id)]})
+
+            # Enroll beneficiaries
+            if rec.gen_benificiaries == "yes":
+                domain = [("is_registrant", "=", True)]
+                if rec.target_type == "group":
+                    domain += [("is_group", "=", True)]
+                else:
+                    domain += [("is_group", "=", False)]
+                domain += self._safe_eval(rec.eligibility_domain)
+                # Filter res.partner and get ids
+                partners = self.env["res.partner"].search(domain)
+                if partners:
+                    partner_vals = []
+                    for p in partners.ids:
+                        partner_vals.append((0, 0, {"partner_id": p}))
+                    vals.update({"program_membership_ids": partner_vals})
+                    _logger.info("DEBUG: %s" % partner_vals)
 
             # Complete the program data
             program.update(vals)

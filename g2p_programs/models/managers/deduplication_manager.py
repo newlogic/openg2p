@@ -483,7 +483,9 @@ class IDDocumentDeduplicationEligibilityManager(models.Model):
         for i in registrant_ids:
             if i.reg_ids:
                 registrant_ids_with_id += [
-                    i.id for x in i.reg_ids if x.expiry_date > date.today()
+                    i.id
+                    for x in i.reg_ids
+                    if x.expiry_date and x.expiry_date > date.today()
                 ]
         registrant_ids_with_id = list(dict.fromkeys(registrant_ids_with_id))
 

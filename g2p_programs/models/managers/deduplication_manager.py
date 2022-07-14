@@ -228,7 +228,7 @@ class IDDocumentDeduplication(models.Model):
         # Check ID Docs of each individual
         for i in group_memberships:
             individual_id_docs += [
-                x.id
+                x.value
                 for x in i.individual.reg_ids
                 if x.id_type in self.supported_id_document_types
             ]
@@ -236,7 +236,7 @@ class IDDocumentDeduplication(models.Model):
         # Check ID Docs of each group
         for ix in group:
             individual_id_docs += [
-                x.id
+                x.value
                 for x in ix.reg_ids
                 if x.id_type in self.supported_id_document_types
             ]
@@ -251,10 +251,10 @@ class IDDocumentDeduplication(models.Model):
             "Duplicate Individuals ID Docs IDs: %s", duplicate_individuals_id_docs
         )
 
-        duplicate_individuals_ids = self.env["res.partner"].search(
-            [("reg_ids", "in", duplicate_individuals_id_docs)]
+        duplicate_individuals_ids = self.env["g2p.reg.id"].search(
+            [("value", "in", duplicate_individuals_id_docs)]
         )
-        duplicate_individuals = [x.id for x in duplicate_individuals_ids]
+        duplicate_individuals = [x.registrant for x in duplicate_individuals_ids]
 
         group_with_duplicates = self.env["g2p.group.membership"].search(
             [("group", "in", group_ids), ("individual", "in", duplicate_individuals)]
@@ -372,11 +372,13 @@ class PhoneNumberDeduplication(models.Model):
         individual_phone_numbers = []
         # Check Phone Numbers of each individual
         for i in group_memberships:
-            individual_phone_numbers += [x.id for x in i.individual.phone_number_ids]
+            individual_phone_numbers += [
+                x.phone_no for x in i.individual.phone_number_ids
+            ]
 
         # Check Phone Numbers of each group
         for ix in group:
-            individual_phone_numbers += [x.id for x in ix.phone_number_ids]
+            individual_phone_numbers += [x.phone_no for x in ix.phone_number_ids]
 
         _logger.info("individual_phone_numbers: %s", individual_phone_numbers)
         duplicate_individuals_phone_numbers = [
@@ -389,8 +391,8 @@ class PhoneNumberDeduplication(models.Model):
             duplicate_individuals_phone_numbers,
         )
 
-        duplicate_individuals_ids = self.env["res.partner"].search(
-            [("phone_number_ids", "in", duplicate_individuals_phone_numbers)]
+        duplicate_individuals_ids = self.env["g2p.phone.number"].search(
+            [("phone_no", "in", duplicate_individuals_phone_numbers)]
         )
         duplicate_individuals = [x.id for x in duplicate_individuals_ids]
 

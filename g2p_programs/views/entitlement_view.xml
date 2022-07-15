@@ -183,8 +183,8 @@
         <field name="res_model">g2p.entitlement</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="entitlement_filter" />
-        <field name="context">{}</field>
-        <field name="domain">[]</field>
+        <field name="context">{'default_is_cash_entitlement':True}</field>
+        <field name="domain">[('is_cash_entitlement','=',True)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new entitlement!

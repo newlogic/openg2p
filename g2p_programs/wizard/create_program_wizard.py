@@ -64,7 +64,7 @@ class G2PCreateNewProgramWiz(models.TransientModel):
         help="0 means no limit",
     )
     entitlement_validation_group_id = fields.Many2one(
-        "res.groups", string="Payment Validation Group"
+        "res.groups", string="Entitlement Validation Group"
     )
 
     target_type = fields.Selection(

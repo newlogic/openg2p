@@ -74,7 +74,7 @@ class DefaultCashEntitlementManager(models.Model):
     # Group able to validate the payment
     # Todo: Create a record rule for payment_validation_group
     entitlement_validation_group_id = fields.Many2one(
-        "res.groups", string="Payment Validation Group"
+        "res.groups", string="Entitlement Validation Group"
     )
 
     def prepare_entitlements(self, cycle, beneficiaries):

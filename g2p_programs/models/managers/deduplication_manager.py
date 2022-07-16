@@ -528,6 +528,8 @@ class PhoneNumberDeduplicationEligibilityManager(models.Model):
     _inherit = ["g2p.program_membership.manager", "g2p.manager.source.mixin"]
     _description = "Phone Number Deduplication Eligibility"
 
+    eligibility_domain = fields.Text(string="Domain", default="[]")
+
     def _prepare_eligible_domain(self, membership):
         ids = membership.mapped("partner_id.id")
         registrant_ids = self.env["res.partner"].search([("id", "in", ids)])

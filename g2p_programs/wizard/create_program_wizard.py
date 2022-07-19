@@ -236,6 +236,10 @@ class G2PCreateNewProgramWiz(models.TransientModel):
                 ("user_type_id.type", "=", "liquidity"),
             ]
         )
+        # Check if code is unique
+        code_exist = self.env["account.journal"].search([("code", "=", code)])
+        if code_exist:
+            code += str(len(code_exist)) + code
         default_account_id = None
         if account_chart:
             default_account_id = account_chart[0].id

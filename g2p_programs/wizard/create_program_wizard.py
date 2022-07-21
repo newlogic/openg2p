@@ -77,7 +77,7 @@ class G2PCreateNewProgramWiz(models.TransientModel):
     )
 
     state = fields.Selection(
-        [("step1", "Set Defaults"), ("step2", "Create Beneficiaries")],
+        [("step1", "Set Defaults"), ("step2", "Import Registrants")],
         "Status",
         default="step1",
         readonly=True,

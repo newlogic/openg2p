@@ -70,7 +70,10 @@ class G2PAssignToProgramWizard(models.TransientModel):
                             % rec.name
                         )
                 if proceed:
-                    if self.program_id.id not in rec.program_membership_ids.ids:
+                    program_ids = [
+                        rec.program_id.id for rec in rec.program_membership_ids
+                    ]
+                    if self.program_id.id not in program_ids:
                         ok_ctr += 1
                         vals = {
                             "partner_id": rec.id,

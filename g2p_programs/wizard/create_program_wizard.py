@@ -69,7 +69,6 @@ class G2PCreateNewProgramWiz(models.TransientModel):
         [("default", "Default")],
         "Applied For",
         default="default",
-        # required=True,
     )
     entitlement_validation_group_id = fields.Many2one(
         "res.groups", string="Entitlement Validation Group"

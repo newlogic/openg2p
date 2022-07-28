@@ -63,7 +63,12 @@
                                     options="{'horizontal': true}"
                                 />
                             </group>
-                            <group colspan="4" col="4" name="cash">
+                            <group
+                                colspan="4"
+                                col="4"
+                                name="default"
+                                attrs="{'invisible':[('entitlement_kind','!=', 'default')]}"
+                            >
                                 <field name="amount_per_cycle" />
                                 <field name="amount_per_individual_in_group" />
                                 <field name="max_individual_in_group" />

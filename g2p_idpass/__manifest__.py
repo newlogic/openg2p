@@ -2,7 +2,7 @@
 
 
 {
-    "name": "ID PASS Module",
+    "name": "ID PASS",
     "category": "G2P",
     "version": "15.0.0.0.1",
     "sequence": 1,

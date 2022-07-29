@@ -1,6 +1,6 @@
 # Part of Newlogic G2P. See LICENSE file for full copyright and licensing details.
 {
-    "name": "G2P registrant Module",
+    "name": "G2P Registrant",
     "category": "G2P",
     "version": "15.0.0.0.1",
     "sequence": 1,

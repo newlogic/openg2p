@@ -1,9 +1,12 @@
 # Part of Newlogic G2P. See LICENSE file for full copyright and licensing details.
 import collections
+import itertools
 import logging
 from datetime import date
 
 from odoo import api, fields, models
+
+from odoo.addons.phone_validation.tools import phone_validation
 
 _logger = logging.getLogger(__name__)
 
@@ -181,6 +184,10 @@ class IDDocumentDeduplication(models.Model):
                 duplicate_beneficiaries = (
                     self._check_duplicate_by_group_with_individual(beneficiaries)
                 )
+            else:
+                duplicate_beneficiaries = self._check_duplicate_by_individual(
+                    beneficiaries
+                )
             return len(duplicate_beneficiaries)
 
     def _record_duplicate(self, manager, beneficiary_ids, reason):
@@ -224,41 +231,51 @@ class IDDocumentDeduplication(models.Model):
         _logger.info("group_memberships: %s", group_memberships)
 
         individuals_ids = [rec.individual.id for rec in group_memberships]
-        _logger.info("individuals_ids: %s", individuals_ids)
-        individual_id_docs = []
-        # Check ID Docs of each individual
+        _logger.info("Checking ID Document Duplicates for: %s", individuals_ids)
+
+        individual_id_docs = {}
+        # Check ID Documents of each individual
         for i in group_memberships:
-            individual_id_docs += [
-                x.value
-                for x in i.individual.reg_ids
-                if x.id_type in self.supported_id_document_types
-            ]
+            for x in i.individual.reg_ids:
+                if (
+                    x.id_type in self.supported_id_document_types
+                    and x.expiry_date > date.today()
+                ):
+                    id_doc_id_with_id_type_and_value = {
+                        x.id: x.id_type.name + "-" + x.value
+                    }
+                    individual_id_docs.update(id_doc_id_with_id_type_and_value)
 
         # Check ID Docs of each group
         for ix in group:
-            individual_id_docs += [
-                x.value
-                for x in ix.reg_ids
-                if x.id_type in self.supported_id_document_types
-            ]
+            for x in ix.reg_ids:
+                if (
+                    x.id_type in self.supported_id_document_types
+                    and x.expiry_date > date.today()
+                ):
+                    id_doc_id_with_id_type_and_value = {
+                        x.id: x.id_type.name + "-" + x.value
+                    }
+                    individual_id_docs.update(id_doc_id_with_id_type_and_value)
 
-        _logger.info("individual_id_docs: %s", individual_id_docs)
-        duplicate_individuals_id_docs = [
-            item
-            for item, count in collections.Counter(individual_id_docs).items()
-            if count > 1
-        ]
-        _logger.info(
-            "Duplicate Individuals ID Docs IDs: %s", duplicate_individuals_id_docs
-        )
+        _logger.info("Individual ID Documents: %s", individual_id_docs)
+        rev_dict = {}
+        for key, value in individual_id_docs.items():
+            rev_dict.setdefault(value, set()).add(key)
 
-        duplicate_individuals_ids = self.env["g2p.reg.id"].search(
-            [("value", "in", duplicate_individuals_id_docs)]
+        duplicate_ids = filter(lambda x: len(x) > 1, rev_dict.values())
+        duplicate_ids = list(duplicate_ids)
+        duplicate_ids = list(itertools.chain.from_iterable(duplicate_ids))
+        _logger.info("Reg_id IDS with Duplicated ID Documents: %s", duplicate_ids)
+
+        duplicated_doc_ids = self.env["g2p.reg.id"].search(
+            [("id", "in", duplicate_ids)]
         )
-        duplicate_individuals = [x.registrant for x in duplicate_individuals_ids]
+        individual_ids = [x.registrant.id for x in duplicated_doc_ids]
+        individual_ids = list(dict.fromkeys(individual_ids))
 
         group_with_duplicates = self.env["g2p.group.membership"].search(
-            [("group", "in", group_ids), ("individual", "in", duplicate_individuals)]
+            [("group", "in", group_ids), ("individual", "in", individual_ids)]
         )
 
         _logger.info("group_with_duplicates: %s", group_with_duplicates)
@@ -282,7 +299,9 @@ class IDDocumentDeduplication(models.Model):
             )
             duplicate_beneficiariy_ids = duplicate_beneficiaries.mapped("id")
 
-            self._record_duplicate(self, duplicate_beneficiariy_ids, "Duplicate IDs")
+            self._record_duplicate(
+                self, duplicate_beneficiariy_ids, "Duplicate ID Documents"
+            )
 
             duplicated_enrolled = duplicate_beneficiaries.filtered(
                 lambda rec: rec.state == "enrolled"
@@ -300,6 +319,61 @@ class IDDocumentDeduplication(models.Model):
             ).write({"state": "duplicated"})
 
         return group_with_duplicates
+
+    def _check_duplicate_by_individual(self, beneficiaries):
+        """
+        This method is used to check if there are any duplicates among the individuals id docs.
+        :param beneficiary_ids: The beneficiaries.
+        :return:
+        """
+        _logger.info("-" * 100)
+        individual_ids = beneficiaries.mapped("partner_id.id")
+        individuals = self.env["res.partner"].search([("id", "in", individual_ids)])
+        _logger.info("Checking ID Document Duplicates for: %s", individuals)
+
+        individual_id_docs = {}
+        # Check ID Documents of each individual
+        for i in individuals:
+            for x in i.reg_ids:
+                if (
+                    x.id_type in self.supported_id_document_types
+                    and x.expiry_date > date.today()
+                ):
+                    id_doc_id_with_id_type_and_value = {
+                        x.id: x.id_type.name + "-" + x.value
+                    }
+                    individual_id_docs.update(id_doc_id_with_id_type_and_value)
+
+        _logger.info("Individual ID Documents: %s", individual_id_docs)
+        rev_dict = {}
+        for key, value in individual_id_docs.items():
+            rev_dict.setdefault(value, set()).add(key)
+
+        duplicate_ids = filter(lambda x: len(x) > 1, rev_dict.values())
+        duplicate_ids = list(duplicate_ids)
+        duplicate_ids = list(itertools.chain.from_iterable(duplicate_ids))
+        _logger.info("Reg_id IDS with Duplicated ID Documents: %s", duplicate_ids)
+
+        duplicated_doc_ids = self.env["g2p.reg.id"].search(
+            [("id", "in", duplicate_ids)]
+        )
+        individual_ids = [x.registrant.id for x in duplicated_doc_ids]
+        individual_ids = list(dict.fromkeys(individual_ids))
+        _logger.info("Individual IDS with Duplicated ID Documents: %s", individual_ids)
+        individual_program_membership = self.env["g2p.program_membership"].search(
+            [("partner_id", "in", individual_ids)]
+        )
+
+        for duplicates in individual_program_membership:
+            duplicate_individuals = [duplicates.id]
+            self._record_duplicate(
+                self, duplicate_individuals, "Duplicate ID Documents"
+            )
+
+            if duplicates.state == "enrolled":
+                duplicates.write({"state": "duplicated"})
+
+        return individual_program_membership
 
 
 class PhoneNumberDeduplication(models.Model):
@@ -326,6 +400,10 @@ class PhoneNumberDeduplication(models.Model):
                 duplicate_beneficiaries = (
                     self._check_duplicate_by_group_with_individual(beneficiaries)
                 )
+            else:
+                duplicate_beneficiaries = self._check_duplicate_by_individual(
+                    beneficiaries
+                )
             return len(duplicate_beneficiaries)
 
     def _record_duplicate(self, manager, beneficiary_ids, reason):
@@ -370,38 +448,66 @@ class PhoneNumberDeduplication(models.Model):
 
         individuals_ids = [rec.individual.id for rec in group_memberships]
         _logger.info("individuals_ids: %s", individuals_ids)
-        individual_phone_numbers = []
+        individual_phone_numbers = {}
         # Check Phone Numbers of each individual
         for i in group_memberships:
-            individual_phone_numbers += [
-                x.phone_no for x in i.individual.phone_number_ids
-            ]
+            for x in i.individual.phone_number_ids:
+                country_fname = "country_id"
+                number = x.phone_no
+                sanitized = str(
+                    phone_validation.phone_sanitize_numbers_w_record(
+                        [number],
+                        self,
+                        record_country_fname=country_fname,
+                        force_format="E164",
+                    )[number]["sanitized"]
+                )
+                phone_id_with_sanitized = {x.id: sanitized}
+                individual_phone_numbers.update(phone_id_with_sanitized)
 
         # Check Phone Numbers of each group
         for ix in group:
-            individual_phone_numbers += [x.phone_no for x in ix.phone_number_ids]
+            for x in ix.phone_number_ids:
+                country_fname = "country_id"
+                number = x.phone_no
+                sanitized = str(
+                    phone_validation.phone_sanitize_numbers_w_record(
+                        [number],
+                        self,
+                        record_country_fname=country_fname,
+                        force_format="E164",
+                    )[number]["sanitized"]
+                )
+                phone_id_with_sanitized = {x.id: sanitized}
+                individual_phone_numbers.update(phone_id_with_sanitized)
 
-        _logger.info("individual_phone_numbers: %s", individual_phone_numbers)
-        duplicate_individuals_phone_numbers = [
-            item
-            for item, count in collections.Counter(individual_phone_numbers).items()
-            if count > 1
-        ]
-        _logger.info(
-            "Duplicate Individuals Phone Number IDs: %s",
-            duplicate_individuals_phone_numbers,
-        )
+        _logger.info("Individual Phone Numbers: %s", individual_phone_numbers)
+
+        rev_dict = {}
+        for key, value in individual_phone_numbers.items():
+            rev_dict.setdefault(value, set()).add(key)
+
+        duplicate_ids = filter(lambda x: len(x) > 1, rev_dict.values())
+        duplicate_ids = list(duplicate_ids)
+        duplicate_ids = list(itertools.chain.from_iterable(duplicate_ids))
+        _logger.info("PhoneNumber IDS with Duplicated Phone Numbers: %s", duplicate_ids)
 
         duplicate_individuals_ids = self.env["g2p.phone.number"].search(
-            [("phone_no", "in", duplicate_individuals_phone_numbers)]
+            [("id", "in", duplicate_ids)]
         )
-        duplicate_individuals = [x.id for x in duplicate_individuals_ids]
+
+        duplicate_individuals = [x.partner_id.id for x in duplicate_individuals_ids]
+        duplicate_individuals = list(dict.fromkeys(duplicate_individuals))
+        _logger.info(
+            "Individual IDS with Duplicated Phone Numbers: %s", duplicate_individuals
+        )
 
         group_with_duplicates = self.env["g2p.group.membership"].search(
             [("group", "in", group_ids), ("individual", "in", duplicate_individuals)]
         )
 
-        _logger.info("group_with_duplicates: %s", group_with_duplicates)
+        _logger.info("Group With Duplicates: %s", group_with_duplicates)
+
         group_of_duplicates = {}
         for group_membership in group_with_duplicates:
             _logger.info(
@@ -443,6 +549,65 @@ class PhoneNumberDeduplication(models.Model):
 
         return group_with_duplicates
 
+    def _check_duplicate_by_individual(self, beneficiaries):
+        """
+        This method is used to check if there are any duplicates among the individuals docs.
+        :param beneficiary_ids: The beneficiaries.
+        :return:
+        """
+        _logger.info("-" * 100)
+        individual_ids = beneficiaries.mapped("partner_id.id")
+        individuals = self.env["res.partner"].search([("id", "in", individual_ids)])
+        _logger.info("Checking Phone Duplicates for: %s", individuals)
+
+        individual_phone_numbers = {}
+        # Check Phone Numbers of each individual
+        for i in individuals:
+            for x in i.phone_number_ids:
+                country_fname = "country_id"
+                number = x.phone_no
+                sanitized = str(
+                    phone_validation.phone_sanitize_numbers_w_record(
+                        [number],
+                        self,
+                        record_country_fname=country_fname,
+                        force_format="E164",
+                    )[number]["sanitized"]
+                )
+                phone_id_with_sanitized = {x.id: sanitized}
+                individual_phone_numbers.update(phone_id_with_sanitized)
+
+        _logger.info("Individual Phone Numbers: %s", individual_phone_numbers)
+        rev_dict = {}
+        for key, value in individual_phone_numbers.items():
+            rev_dict.setdefault(value, set()).add(key)
+
+        duplicate_ids = filter(lambda x: len(x) > 1, rev_dict.values())
+        duplicate_ids = list(duplicate_ids)
+        duplicate_ids = list(itertools.chain.from_iterable(duplicate_ids))
+        _logger.info("PhoneNumber IDS with Duplicated Phone Numbers: %s", duplicate_ids)
+
+        duplicated_phone_ids = self.env["g2p.phone.number"].search(
+            [("id", "in", duplicate_ids)]
+        )
+        individual_ids = [x.partner_id.id for x in duplicated_phone_ids]
+        individual_ids = list(dict.fromkeys(individual_ids))
+        _logger.info("Individual IDS with Duplicated Phone Numbers: %s", individual_ids)
+        individual_program_membership = self.env["g2p.program_membership"].search(
+            [("partner_id", "in", individual_ids)]
+        )
+
+        for duplicates in individual_program_membership:
+            duplicate_individuals = [duplicates.id]
+            self._record_duplicate(
+                self, duplicate_individuals, "Duplicate Phone Numbers"
+            )
+
+            if duplicates.state == "enrolled":
+                duplicates.write({"state": "duplicated"})
+
+        return individual_program_membership
+
 
 class IDPhoneEligibilityManager(models.Model):
     """
@@ -479,6 +644,7 @@ class IDDocumentDeduplicationEligibilityManager(models.Model):
     def _prepare_eligible_domain(self, membership):
         ids = membership.mapped("partner_id.id")
         registrant_ids = self.env["res.partner"].search([("id", "in", ids)])
+        _logger.info("Checking Registrants: %s", registrant_ids)
         registrant_ids_with_id = []
         for i in registrant_ids:
             if i.reg_ids:
@@ -533,9 +699,10 @@ class PhoneNumberDeduplicationEligibilityManager(models.Model):
     def _prepare_eligible_domain(self, membership):
         ids = membership.mapped("partner_id.id")
         registrant_ids = self.env["res.partner"].search([("id", "in", ids)])
+        _logger.info("Checking Registrants: %s", registrant_ids)
         registrant_ids_with_phone = []
         for i in registrant_ids:
-            if i.reg_ids:
+            if i.phone_number_ids:
                 registrant_ids_with_phone += [
                     i.id for x in i.phone_number_ids if not x.disabled
                 ]

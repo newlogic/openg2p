@@ -200,7 +200,10 @@
         <span class="k">for</span> <span class="n">rec</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
             <span class="n">beneficiaries</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">_verify_eligibility</span><span class="p">(</span><span class="n">program_memberships</span><span class="p">)</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;g2p.program_membership&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-                <span class="p">[(</span><span class="s2">&quot;partner_id&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">beneficiaries</span><span class="p">)]</span>
+                <span class="p">[</span>
+                    <span class="p">(</span><span class="s2">&quot;partner_id&quot;</span><span class="p">,</span> <span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">beneficiaries</span><span class="p">),</span>
+                    <span class="p">(</span><span class="s2">&quot;program_id&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">program_id</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+                <span class="p">]</span>
             <span class="p">)</span></div>
 
 <div class="viewcode-block" id="DefaultEligibilityManager.verify_cycle_eligibility"><a class="viewcode-back" href="../../../../programs/eligibility_manager.html#g2p_programs.models.managers.eligibility_manager.DefaultEligibilityManager.verify_cycle_eligibility">[docs]</a>    <span class="k">def</span> <span class="nf">verify_cycle_eligibility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">,</span> <span class="n">membership</span><span class="p">):</span>

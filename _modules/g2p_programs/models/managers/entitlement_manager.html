@@ -129,6 +129,7 @@
 
 <div class="viewcode-block" id="BaseEntitlementManager"><a class="viewcode-back" href="../../../../programs/entitlement_manager.html#g2p_programs.models.managers.entitlement_manager.BaseEntitlementManager">[docs]</a><span class="k">class</span> <span class="nc">BaseEntitlementManager</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">AbstractModel</span><span class="p">):</span>
     <span class="n">_name</span> <span class="o">=</span> <span class="s2">&quot;g2p.base.program.entitlement.manager&quot;</span>
+    <span class="n">_inherit</span> <span class="o">=</span> <span class="s2">&quot;base.programs.manager&quot;</span>
     <span class="n">_description</span> <span class="o">=</span> <span class="s2">&quot;Base Entitlement Manager&quot;</span>
 
     <span class="n">name</span> <span class="o">=</span> <span class="n">fields</span><span class="o">.</span><span class="n">Char</span><span class="p">(</span><span class="s2">&quot;Manager Name&quot;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -189,6 +190,7 @@
 <div class="viewcode-block" id="DefaultCashEntitlementManager.prepare_entitlements"><a class="viewcode-back" href="../../../../programs/entitlement_manager.html#g2p_programs.models.managers.entitlement_manager.DefaultCashEntitlementManager.prepare_entitlements">[docs]</a>    <span class="k">def</span> <span class="nf">prepare_entitlements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cycle</span><span class="p">,</span> <span class="n">beneficiaries</span><span class="p">):</span>
         <span class="c1"># TODO: create a Entitlement of `amount_per_cycle` for each member that do not have one yet for the cycle and</span>
         <span class="n">benecifiaries_ids</span> <span class="o">=</span> <span class="n">beneficiaries</span><span class="o">.</span><span class="n">mapped</span><span class="p">(</span><span class="s2">&quot;partner_id.id&quot;</span><span class="p">)</span>
+
         <span class="n">benecifiaries_with_entitlements</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">env</span><span class="p">[</span><span class="s2">&quot;g2p.entitlement&quot;</span><span class="p">]</span>
             <span class="o">.</span><span class="n">search</span><span class="p">(</span>

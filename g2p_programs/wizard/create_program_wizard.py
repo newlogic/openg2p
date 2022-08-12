@@ -1,7 +1,9 @@
 # Part of Newlogic G2P. See LICENSE file for full copyright and licensing details.
 import logging
+from uuid import uuid4
 
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 # from odoo.exceptions import ValidationError
 
@@ -63,6 +65,11 @@ class G2PCreateNewProgramWiz(models.TransientModel):
         string="Maximum number of individual in group",
         help="0 means no limit",
     )
+    entitlement_kind = fields.Selection(
+        [("default", "Default")],
+        "Applied For",
+        default="default",
+    )
     entitlement_validation_group_id = fields.Many2one(
         "res.groups", string="Entitlement Validation Group"
     )
@@ -102,16 +109,49 @@ class G2PCreateNewProgramWiz(models.TransientModel):
             "target": "new",
         }
 
+    def _check_required_fields(self):
+        if (
+            self.entitlement_kind == "default"
+            and self.amount_per_cycle == 0.0
+            and self.amount_per_individual_in_group == 0.0
+        ):
+            raise UserError(
+                _(
+                    "The 'Amount per cycle' or 'Amount per individual in group' "
+                    + "must be filled-up for the default entitlement manager."
+                )
+            )
+
+    def _get_entitlement_manager(self, program_id):
+        val = None
+        if self.entitlement_kind == "default":
+            # Add a new record to default entitlement manager model
+            def_mgr_obj = "g2p.program.entitlement.manager.default"
+            def_mgr = self.env[def_mgr_obj].create(
+                {
+                    "name": "Default",
+                    "program_id": program_id,
+                    "amount_per_cycle": self.amount_per_cycle,
+                    "amount_per_individual_in_group": self.amount_per_individual_in_group,
+                    "max_individual_in_group": self.max_individual_in_group,
+                    "entitlement_validation_group_id": self.entitlement_validation_group_id.id,
+                }
+            )
+            # Add a new record to entitlement manager parent model
+            man_obj = self.env["g2p.program.entitlement.manager"]
+            mgr = man_obj.create(
+                {
+                    "program_id": program_id,
+                    "manager_ref_id": "%s,%s" % (def_mgr_obj, str(def_mgr.id)),
+                }
+            )
+            val = {"entitlement_managers": [(4, mgr.id)]}
+        return val
+
     def create_program(self):
-        # Set default program journal
-        # journals = self.env["account.journal"].search(
-        #    [("beneficiary_disb", "=", True), ("type", "in", ("bank", "cash"))]
-        # )
+        self._check_required_fields()
         for rec in self:
-            # if journals:
-            #    journal_id = journals[0].id
-            # else:
-            # There are no default journals defined, create a new one
+            # Create a new journal for this program
             journal_id = self.create_journal(rec.name, rec.currency_id.id)
 
             program = self.env["g2p.program"].create(
@@ -166,28 +206,8 @@ class G2PCreateNewProgramWiz(models.TransientModel):
             )
             vals.update({"cycle_managers": [(4, mgr.id)]})
 
-            # Set Default Entitlement Manager settings
-            # Add a new record to default entitlement manager model
-            def_mgr_obj = "g2p.program.entitlement.manager.default"
-            def_mgr = self.env[def_mgr_obj].create(
-                {
-                    "name": "Default",
-                    "program_id": program_id,
-                    "amount_per_cycle": rec.amount_per_cycle,
-                    "amount_per_individual_in_group": rec.amount_per_individual_in_group,
-                    "max_individual_in_group": rec.max_individual_in_group,
-                    "entitlement_validation_group_id": rec.entitlement_validation_group_id.id,
-                }
-            )
-            # Add a new record to entitlement manager parent model
-            man_obj = self.env["g2p.program.entitlement.manager"]
-            mgr = man_obj.create(
-                {
-                    "program_id": program_id,
-                    "manager_ref_id": "%s,%s" % (def_mgr_obj, str(def_mgr.id)),
-                }
-            )
-            vals.update({"entitlement_managers": [(4, mgr.id)]})
+            # Set Default Entitlement Manager
+            vals.update(rec._get_entitlement_manager(program_id))
 
             # Enroll beneficiaries
             if rec.gen_benificiaries == "yes":
@@ -239,7 +259,8 @@ class G2PCreateNewProgramWiz(models.TransientModel):
         # Check if code is unique
         code_exist = self.env["account.journal"].search([("code", "=", code)])
         if code_exist:
-            code += str(len(code_exist)) + code
+            # code += str(len(code_exist)) + code
+            code = str(uuid4())[4:-19][1:]
         default_account_id = None
         if account_chart:
             default_account_id = account_chart[0].id

@@ -20,6 +20,7 @@ class EntitlementManager(models.Model):
 
 class BaseEntitlementManager(models.AbstractModel):
     _name = "g2p.base.program.entitlement.manager"
+    _inherit = "base.programs.manager"
     _description = "Base Entitlement Manager"
 
     name = fields.Char("Manager Name", required=True)
@@ -80,6 +81,7 @@ class DefaultCashEntitlementManager(models.Model):
     def prepare_entitlements(self, cycle, beneficiaries):
         # TODO: create a Entitlement of `amount_per_cycle` for each member that do not have one yet for the cycle and
         benecifiaries_ids = beneficiaries.mapped("partner_id.id")
+
         benecifiaries_with_entitlements = (
             self.env["g2p.entitlement"]
             .search(

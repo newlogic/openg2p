@@ -91,7 +91,10 @@ class DefaultEligibilityManager(models.Model):
         for rec in self:
             beneficiaries = rec._verify_eligibility(program_memberships)
             return self.env["g2p.program_membership"].search(
-                [("partner_id", "in", beneficiaries)]
+                [
+                    ("partner_id", "in", beneficiaries),
+                    ("program_id", "=", self.program_id.id),
+                ]
             )
 
     def verify_cycle_eligibility(self, cycle, membership):

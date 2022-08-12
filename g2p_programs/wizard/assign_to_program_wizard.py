@@ -49,28 +49,29 @@ class G2PAssignToProgramWizard(models.TransientModel):
             ig_ctr = 0
             ok_ctr = 0
             for rec in self.env["res.partner"].search([("id", "in", partner_ids)]):
-                ctr += 1
-                _logger.info("Processing (%s): %s" % (ctr, rec.name))
-                proceed = False
-                if rec.is_group:  # Get only group registrants
-                    if self.target_type == "group":
-                        proceed = True
-                    else:
-                        ig_ctr += 1
-                        _logger.info(
-                            "Ignored because registrant is not a group: %s" % rec.name
-                        )
-                else:  # Get only individual registrants
-                    if self.target_type == "individual":
-                        proceed = True
-                    else:
-                        ig_ctr += 1
-                        _logger.info(
-                            "Ignored because registrant is not an individual: %s"
-                            % rec.name
-                        )
-                if proceed:
-                    if self.program_id.id not in rec.program_membership_ids.ids:
+                if self.program_id not in rec.program_membership_ids.program_id:
+                    ctr += 1
+                    _logger.info("Processing (%s): %s" % (ctr, rec.name))
+                    proceed = False
+                    if rec.is_group:  # Get only group registrants
+                        if self.target_type == "group":
+                            proceed = True
+                        else:
+                            ig_ctr += 1
+                            _logger.info(
+                                "Ignored because registrant is not a group: %s"
+                                % rec.name
+                            )
+                    else:  # Get only individual registrants
+                        if self.target_type == "individual":
+                            proceed = True
+                        else:
+                            ig_ctr += 1
+                            _logger.info(
+                                "Ignored because registrant is not an individual: %s"
+                                % rec.name
+                            )
+                    if proceed:
                         ok_ctr += 1
                         vals = {
                             "partner_id": rec.id,
@@ -78,12 +79,12 @@ class G2PAssignToProgramWizard(models.TransientModel):
                         }
                         _logger.info("Adding to Program Membership: %s" % vals)
                         self.env["g2p.program_membership"].create(vals)
-                    else:
-                        ig_ctr += 1
-                        _logger.info(
-                            "%s was ignored because the registrant is already in the Program %s"
-                            % (rec.name, self.program_id.name)
-                        )
+                else:
+                    ig_ctr += 1
+                    _logger.info(
+                        "%s was ignored because the registrant is already in the Program %s"
+                        % (rec.name, self.program_id.name)
+                    )
             _logger.info(
                 "Total selected registrants:%s, Total ignored:%s, Total added to group:%s"
                 % (ctr, ig_ctr, ok_ctr)
